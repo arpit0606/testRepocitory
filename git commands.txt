@@ -1,0 +1,123 @@
+
+git config --global --unset credential.helper 
+git config --system --unset credential.helper
+git clone url
+
+cd to new directory
+
+git fetch origin
+
+git checkout -b EMA-117-BCP0850-drools-web-service-bamboo-build-fails
+				//can add multiple origins (origin1, origin2 ... and use origin name in pull/push command)
+
+git pull origin master/branchName
+
+open and make changes
+
+git status
+
+git add .
+
+git commit -m "ICM-3370:DummyUpdate"
+
+git push origin branchName
+
+EXIT MERGE_BRANCH editor
+first press esc to save the change then :wq or else directly :wq to not save change
+ESC :wq (shift+: wq enter)
+
+ICM-3305_ReviewMeetingCommentsFix
+
+Ammend commit message
+git commit --amend -m "New commit message"
+
+create branch from tag Checkout branch work and commit to remote 
+git fetch && git fetch --tags
+git checkout -b <New Branch Name> <TAG Name> //this will create local branch (not in remote)
+	Make changes to pom / release versions
+	Stage changes
+git commit -m "Update pom versions for Hotfix branch"
+git push -u origin NewBranchName	//Finally push your newly created branch to remote repository.
+
+
+git checkout iqc-web-app-1.0
+
+
+
+Maven commands
+mvn clean install -DskipTests
+mvn clean install -X -e -DskipTests
+mvn clean install -DskipTest
+
+install telnet on windows (openCmdprompt in admin mode and enter below command)
+dism /online /Enable-Feature /FeatureName:TelnetClient
+
+Linuxnk Command
+rm -f .ssh/known_hosts (to delete known host list)
+wget <url>
+unzip fileName.zip direcotryName (to unzip zip)
+unzip jbpm-server-7.17.0.Final-dist.zip jbpm-server-7.17.0.Final-dist
+
+tar xvzf drools-dist-1.0.0-SNAPSHOT-distribution-unix.tar.gz -C directoryName/ (to unZIp tar)
+tar xvzf raps-dist-1.0.9-SNAPSHOT-distribution-unix.tar.gz -C rapsCommon_EMA218/
+rm -r directoryName
+rm fileNmae
+
+Ping unix
+wcdpf1-awddpc/act# ping tcp vlan2194 10.226.90.212 8000 source 10.50.33.60 8000
+telnet awdenctr.nonprod.dstcorp.net 443
+
+to unpack tar.gz to a folder
+tar -xf ex837-dist-1.0.0-SNAPSHOT-distribution-unix.tar.gz -C Hip837Adapter/
+
+copy directory (goto foldeer containing conf directory first)
+cp -r conf/* /apps/enc/deployment/Hip837Adapter/conf/
+
+delete folder
+rm -r mydir
+
+switch user using sudo
+sudo su -l
+su - mwadm
+
+To delete known host list
+rm -f .ssh/known_hosts (to delete known host list)
+
+To Know what is running in java
+ps -ef | grep java
+
+kill task
+netstat -plten |grep java (output 16085/java)
+kill -9 16085
+
+
+keystore commands 
+create
+keytool -genkey -alias test.dsthealthsolutions.com -validity 750 -keyalg rsa -keysize 2048 -keystore test_dsthealthsolutions_com.jks -storepass Dsths@123456789 -storetype jks -dname "CN=dhkcccpbd01.dev.ad.testdev.dstcorp.net, OU=Enterprise Services, O=DST Systems\, Inc, L=Kansas City, S=MO, C=US, emailADDRESS=ATripathi@dsthealthsolutions.com"
+update:
+keytool -genkey -alias prod.dsthealthsolutions.com -validity 750 -keyalg rsa -keysize 2048 -keystore test_dsthealthsolutions_com.jks -storepass Dsths@123456789 -storetype jks -dname "CN=dhkcccpbt01.dev.ad.testdev.dstcorp.net, OU=Enterprise Services, O=DST Systems\, Inc, L=Kansas City, S=MO, C=US, emailADDRESS=ATripathi@dsthealthsolutions.com"
+create csr:
+keytool -certreq -alias test.dsthealthsolutions.com -keystore test_dsthealthsolutions_com.jks -storetype jks -storepass Dsths@123456789 -file test_dsthealthsolutions_com.csr
+keytool -certreq -alias prod.dsthealthsolutions.com -keystore test_dsthealthsolutions_com.jks -storetype jks -storepass Dsths@123456789 -file prod_dsthealthsolutions_com.csr
+
+keytool -import -v -alias test.dsthealthsolutions.com -trustcacerts -keystore dstgenericcorrespondencedev.jks -storepass dstiqpwd -keypass dstiqpwd -file dhbhtscc04ah_GCDST.cer 
+
+
+keytool -exportcert -alias "test.dsthealthsolutions.com" -file test_dsthealthsolutions_com.crt -keystore test_dsthealthsolutions_com.jks
+
+keytool -exportcert -alias "CN=DigiCert High Assurance EV Root CA,OU=www.digicert.com,O=DigiCert Inc,C=US" -file digicert_test_dsthealthsolutions_com.ext.crt -keystore test_dsthealthsolutions_com.jks
+
+keytool -exportcert -alias "CN=DigiCert High Assurance EV Root CA,OU=www.digicert.com,O=DigiCert Inc,C=US" -file digicert_test_dsthealthsolutions_com.root.crt -keystore test_dsthealthsolutions_com.jks
+							   
+keytool -v -list -keystore 
+
+
+java -d32 -version
+Try %JAVA_HOME%\bin\java -version
+$ which java (linux)
+windows: for %i in (java.exe) do @echo.   %~$PATH:i
+
+z_infosecAccess request
+
+
+firewall.cpl
