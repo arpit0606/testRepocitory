@@ -1,0 +1,176 @@
+package com.arpittesttyc.examples;
+
+import java.io.File;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Feature;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.codec.binary.Base64;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.MultiPart;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+
+public class RESTExamples {
+
+    final static String ALGORITHM = "HmacSHA512";
+    final static String sep = ":";
+    static Mac hmac = null;
+
+    public static void main(String[] args) {
+
+	System.out.println("Calling Get tyc Version");
+
+	String B2BHash = b2bSignature("97vYzrClLRLvpxaQWjifgBMTADzg1PFH1KPccvpnJNgqliEXyr65kl7uZ5TcNbWF", "USER");
+
+	MultivaluedMap<String, Object> header = new MultivaluedHashMap<String, Object>();
+	header.add("remote_user", "CCUSER");
+	header.add("B2BSignature", B2BHash);
+			String restBody =null;
+
+	// HttpAuthenticationFeature feature =
+	// HttpAuthenticationFeature.basic("DT63023", "Passwd@2");
+
+	Feature loggingFeature = new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.INFO,
+		LoggingFeature.Verbosity.PAYLOAD_ANY, 10000);
+
+	ClientConfig clientConfig = new ClientConfig();
+	// clientConfig.register(feature);
+	clientConfig.register(loggingFeature);
+	clientConfig.register(MultiPartFeature.class);
+
+	Client client = ClientBuilder.newClient(clientConfig);
+
+	WebTarget target = client
+		.target("https://tychsolu.nonprod.arpittestcorp.net/devapp/tycServer/b2b/services/");
+
+	Invocation.Builder invocationBuilder = target.request();
+	invocationBuilder.headers(header);
+
+	Response response = invocationBuilder.get();
+
+	System.out.println(response.getStatus());
+	System.out.println(response.readEntity(String.class));
+
+	System.out.println("Calling Call Search");
+
+	target = client
+		.target("https://tychsolu.nonprod.arpittestcorp.net/devapp/tycServer/b2b/services/");
+
+	invocationBuilder = target.request();
+	invocationBuilder.headers(header);
+
+	restBody = "body";
+
+	response = invocationBuilder
+		.put(Entity.entity(restBody, new MediaType("application", "vnd.arpittesttechnologies.tyc+xml")));
+
+	System.out.println(response.getStatus());
+	System.out.println(response.readEntity(String.class));
+
+	System.out.println("Calling Call LKAGMBR Search");
+
+	target = client
+		.target("https://tychsolu.nonprod.arpittestcorp.net/devapp/tycServer/b2b/services/");
+
+	invocationBuilder = target.request();
+	invocationBuilder.headers(header);
+
+	String restBody2 = "rest body";
+
+	response = invocationBuilder
+		.put(Entity.entity(restBody2, new MediaType("application", "vnd.arpittesttechnologies.tyc+xml")));
+
+	System.out.println(response.getStatus());
+	System.out.println(response.readEntity(String.class));
+
+	System.out.println("Calling Create work in tyc");
+
+	target = client.target("https://tychsolu.nonprod.arpittestcorp.net/devapp/tycServer/b2b/services/");
+
+	invocationBuilder = target.request();
+	invocationBuilder.headers(header);
+
+	restBody = "";
+
+	response = invocationBuilder
+		.post(Entity.entity(restBody, new MediaType("application", "vnd.arpittesttechnologies.tyc+xml")));
+
+	System.out.println(response.getStatus());
+	System.out.println(response.readEntity(String.class));
+
+	System.out.println("Create Source with Attachment in tyc");
+
+	target = client.target("https://tychsolu.nonprod.arpittestcorp.net/devapp/tycServer/b2b/services/");
+
+			String parenttycCaseID="2020-07-14-06.12.51.604560C01";
+			restBody = "test rest body";
+
+	FileDataBodyPart filePart = new FileDataBodyPart("file", new File("D:\\ProjectDocumentation\\All Project Artifacts\\CCNT_AnG_tyc\\Untitled Document.pdf"));
+
+	MultiPart multipart = new FormDataMultiPart()
+		.field("request", restBody, new MediaType("application", "vnd.arpittesttechnologies.tyc+xml"))
+		.bodyPart(filePart);
+
+	invocationBuilder = target.request();
+	invocationBuilder.headers(header);
+
+	response = invocationBuilder.post(Entity.entity(multipart, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+	System.out.println(response.getStatus());
+	System.out.println(response.readEntity(String.class));
+
+    }
+
+    private static String b2bSignature(final String secret, final String userID) {
+
+	final String methodName = "b2bSignature()";
+	System.out.println("Entering: " + methodName);
+
+	final String message = Long.toString(new Date().getTime()) + sep + userID;
+	try {
+	    getHMAC();
+	    final SecretKeySpec secret_key = new SecretKeySpec(secret.getBytes(), ALGORITHM);
+	    hmac.init(secret_key);
+	} catch (InvalidKeyException ikE) {
+	    ikE.printStackTrace();
+	}
+
+	final String hash = new String(Base64.encodeBase64(hmac.doFinal(message.getBytes())));
+
+	return hash + sep + message;
+    }
+
+    private static Mac getHMAC() {
+
+	final String methodName = "getHMAC()";
+	System.out.println("Entering: " + methodName);
+
+	if (hmac == null) {
+	    try {
+		hmac = Mac.getInstance(ALGORITHM);
+	    } catch (NoSuchAlgorithmException e) {
+		e.printStackTrace();
+	    }
+	}
+	return hmac;
+    }
+
+}
