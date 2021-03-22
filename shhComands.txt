@@ -36,3 +36,11 @@ Steps-4: export .crt files and share to change health care team
 
 •	keytool -exportcert -alias "prod.dsthealthsolutions.com" -file prod_dsthealthsolutions_com.crt -keystore prod_dsthealthsolutions_com.jks
 This will create prod_dsthealthsolutions_com.crt share these files to Change health care to be configured at their environment. (consider changing file extension to remove .crt to .txt before sending over email. Email might filter .crt files)
+
+Reference material Online
+SSL how to build client to use other site certificate
+https://www.baeldung.com/httpclient-ssl
+SSL set up certificate:
+https://confluence.ssnc.global/display/dsthsproductdev/Setting+up+SSL+Security+using+Digital+Certificates+in+JBOSS+Server
+
+
