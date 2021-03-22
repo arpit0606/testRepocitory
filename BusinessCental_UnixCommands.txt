@@ -1,0 +1,19 @@
+ssh enchsdev@uxqaphssencqa01
+
+./standalone.sh -b 0.0.0.0 & (to in bkground)
+
+
+rm -f .ssh/known_hosts (to delete known host list)
+
+ssh developer@dervername
+
+sudo su - mwadm
+sudo systemctl restart dervername.service
+sudo systemctl status dervername.service 
+sudo systemctl start dervername.service 
+sudo systemctl stop dervername.service
+
+developer@dev-bc-12990-01 ~]$ sudo systemctl restart ddervername.service
+
+
+
