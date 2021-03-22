@@ -1,0 +1,38 @@
+Steps-1: Generate private-key / public-key pair. The public key is wrapped in a self- signed certificate. To generate the key, type the following command and options in command prompt.
+
+keytool -genkey -alias <application.platform> -validity 750 -keyalg rsa -keysize 2048 -keystore <keystorefilename>.jks -storepass **** -storetype jks -dname "CN=<application.platform>.<dstsystems.com OR dstcorp.net>, OU=Enterprise Services, O=DST Systems\, Inc, L=Kansas City, S=MO, C=US, emailADDRESS=<email-address>" 
+
+
+A file with file name given in place of keystorefilename with (.jks) extension will be created at current location. Back up your generated keystore (.jks) file.
+
+Example 
+keytool -genkey -alias prod.dsthealthsolutions.com -validity 750 -keyalg rsa -keysize 2048 -keystore prod_dsthealthsolutions_com.jks -storepass Dsths@123456789 -storetype jks -dname "CN=dhkcccpbt01.dev.ad.testdev.dstcorp.net, OU=Enterprise Services, O=SS&C Technologies\, Inc, L=Kansas City, S=MO, C=US, emailADDRESS=ATripathi@dsthealthsolutions.com"
+
+Note: in above sample validity is set as 750 days. You can change it to some suitable value.
+
+Steps-2: Generate a certificate request (CSR) and convert to .cer
+keytool -certreq -alias <application.platform> -keystore <keystorefilename>.jks -storetype jks -file <certificateFileName>.csr
+
+Backup your (.csr) file created in this step.
+Example 
+keytool -certreq -alias prod.dsthealthsolutions.com -keystore prod_dsthealthsolutions_com.jks -storetype jks -storepass Dsths@123456789 -file prod_dsthealthsolutions_com.csr
+
+Generate and download .p7b (PKCS#7) format signed file from created CSR file using DST Vanafi portal. You have to login to Vanafi and generate .p7b (PKCS#7)  file by uploading above generated .csr file.
+Convert .p7b (PKCS#7)  to CER 
+openssl pkcs7 -inform DER -outform PEM -in <p7bFileName.p7b> -print_certs > <cerFileName.cer>
+Example
+"D:\Software\Software\openssl-0.9.8e_X64\bin\openssl.exe" pkcs7 -inform DER -outform PEM -in dhkcccpbt01.dev.ad.testdev.dstcorp.net.p7b -print_certs > dhkcccpbt01.dev.ad.testdev.dstcorp.net.cer
+
+Steps-3: Apply .cer into your original jks file and take backup of jks file.
+keytool -import -v -trustcacerts -alias <application.platform> -file <cerFileName.cer> -keystore <jksFileName>  -keypass Dsths@123456789 -storepass Dsths@123456789
+
+
+Example:
+keytool -import -v -trustcacerts -alias prod.dsthealthsolutions.com -file dhkcccpbt01.dev.ad.testdev.dstcorp.net.cer -keystore prod_dsthealthsolutions_com.jks  -keypass Dsths@123456789 -storepass Dsths@123456789
+
+prod_dsthealthsolutions_com.jks is your file which has both private and public key. This file needs to be configured as key file to be configured as keyStore.fileName and trustStore.fileName in section 6.1 Setup Configuration file. 
+
+Steps-4: export .crt files and share to change health care team
+
+•	keytool -exportcert -alias "prod.dsthealthsolutions.com" -file prod_dsthealthsolutions_com.crt -keystore prod_dsthealthsolutions_com.jks
+This will create prod_dsthealthsolutions_com.crt share these files to Change health care to be configured at their environment. (consider changing file extension to remove .crt to .txt before sending over email. Email might filter .crt files)
