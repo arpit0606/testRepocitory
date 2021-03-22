@@ -121,3 +121,7 @@ z_infosecAccess request
 
 
 firewall.cpl
+
+SSH key generation command
+to generation ssh key: {ssh-keygen -t rsa -C "atripathi@dstworldwideservices.com" -b 4096}
+to copy key: {cat ~/.ssh/id_rsa.pub | clip}
